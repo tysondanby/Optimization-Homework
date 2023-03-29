@@ -50,8 +50,8 @@ Threads.@threads for i = 1:1:length(ns)
     push!(errors,minimums/numruns)
 end
 
-p1 = plot(ns,itterations)
-p2 = plot(ns,errors)
+p1 = plot(ns,itterations,xlabel = "Population Size",ylabel = "Itterations to Converge")
+p2 = plot(ns,errors,xlabel = "Population Size",ylabel = "Absolute Error")
 
 
 #Sensitivity study 2
@@ -76,8 +76,8 @@ Threads.@threads for i = 1:1:length(psurvives)
     push!(errors2,minimums/numruns)
 end
 println(length(itterations2))
-p3 = plot(psurvives,itterations2)
-p4 = plot(psurvives,errors2)
+p3 = plot(psurvives,itterations2,xlabel = "Fraction of Population Retained in New Generation",ylabel = "Itterations to Converge")
+p4 = plot(psurvives,errors2,xlabel = "Fraction of Population Retained in New Generation",ylabel = "Absolute Error")
 
 
 #Sensitivity study 3
@@ -102,7 +102,7 @@ Threads.@threads for i = 1:1:length(pmutates)
     push!(errors3,minimums/numruns)
 end
 
-p5 = plot(pmutates,itterations3)
-p6 = plot(pmutates,errors3)
+p5 = plot(pmutates,itterations3,xlabel = "Mutation Probability",ylabel = "Itterations to Converge")
+p6 = plot(pmutates,errors3,xlabel = "Mutation Probability",ylabel = "Absolute Error")
 
 #
