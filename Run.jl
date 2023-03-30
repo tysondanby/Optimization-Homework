@@ -20,9 +20,9 @@ kspread = 1.0
 pophist, fminhist, itters =geneticminimize(eggshell,dummy,xlims,tol,n,kcross,kmutate,pmutate,psurvive,kspread)
 
 println(fminhist[end])
-println(eggshell(pophist[end][1]))
+#println(eggshell(pophist[end][1]))
 println(pophist[end][1])
-println(itters)
+println("Itterations: $itters")
 #plothist(pophist,eggshell,xlims)
 
 
@@ -75,7 +75,7 @@ Threads.@threads for i = 1:1:length(psurvives)
     push!(itterations2,itters/numruns)
     push!(errors2,minimums/numruns)
 end
-println(length(itterations2))
+#println(length(itterations2))
 p3 = plot(psurvives,itterations2,xlabel = "Fraction of Population Retained in New Generation",ylabel = "Itterations to Converge")
 p4 = plot(psurvives,errors2,xlabel = "Fraction of Population Retained in New Generation",ylabel = "Absolute Error")
 
@@ -106,3 +106,33 @@ p5 = plot(pmutates,itterations3,xlabel = "Mutation Probability",ylabel = "Ittera
 p6 = plot(pmutates,errors3,xlabel = "Mutation Probability",ylabel = "Absolute Error")
 
 #
+n = 41
+lastconvergence = 1.0
+while lastconvergence >= 0.5
+    global n = n - 1
+    fail = 0
+    #println("Line 114")
+    Threads.@threads for i = 1:1:numruns
+        history, ~, ~ =geneticminimize(eggshell,dummy,xlims,tol,n,kcross,kmutate,pmutate,psurvive,kspread)
+        #println(history)
+        if norm(history[end][1]) > notminimum
+            fail = fail +1
+        end
+    end
+    global lastconvergence = (numruns-fail)/numruns
+end
+println("Size to Fail 50% of time: $n")
+
+#5.2
+n = 50
+xlims = [[-1.0,-1.0,-1.0],[2.0,2.0,2.0]]
+pophist, fminhist, itters =geneticminimize(hartman,dummy,xlims,tol,n,kcross,kmutate,pmutate,psurvive,kspread)
+println("Problem 5.2")
+println(fminhist[end])
+#println(hartman(pophist[end][1]))
+println(pophist[end][1])
+println("Itterations: $itters")
+
+using Optim
+println()
+result = Optim.optimize(hartman,xlims[1],ParticleSwarm(; lower = xlims[1], upper = xlims[2], n_particles = n))
